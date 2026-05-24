@@ -81,6 +81,8 @@ app.UseRequestLocalization();
 using (var scope = app.Services.CreateScope())
 {
     var services = scope.ServiceProvider;
+    var context = services.GetRequiredService<SportComplexDbContext>();
+    await context.Database.MigrateAsync();
     await DatabaseSeeder.SeedAllAsync(services);
 }
 
