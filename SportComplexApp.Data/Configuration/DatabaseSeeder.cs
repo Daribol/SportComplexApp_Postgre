@@ -28,8 +28,8 @@ namespace SportComplexApp.Data.Configuration
             string adminPassword = configuration["AdminSettings:Password"] ?? "Admin123!";
             await CreateUserWithRoleAsync(userManager, adminEmail, adminPassword, "Admin", "Admin", "User");
 
-            var client1 = await CreateUserWithRoleAsync(userManager, "client1@sport.com", "Client123!", "Client", "Petar", "Petrov");
-            var client2 = await CreateUserWithRoleAsync(userManager, "client2@sport.com", "Client123!", "Client", "Maria", "Ivanova");
+            await CreateUserWithRoleAsync(userManager, "client1@sport.com", "Client123!", "Client", "Petar", "Petrov");
+            await CreateUserWithRoleAsync(userManager, "client2@sport.com", "Client123!", "Client", "Maria", "Ivanova");
 
             var unlinkedTrainers = await context.Trainers.Where(t => t.ClientId == null).ToListAsync();
             foreach (var trainer in unlinkedTrainers)
@@ -44,59 +44,6 @@ namespace SportComplexApp.Data.Configuration
             }
             await context.SaveChangesAsync();
 
-            if (!await context.Reservations.AnyAsync() && client1 != null && client2 != null)
-            {
-                var sports = await context.Sports.ToListAsync();
-                var sportTrainers = await context.SportTrainers.ToListAsync();
-                var random = new Random();
-                var clients = new[] { client1.Id, client2.Id };
-
-                for (int i = 0; i < 20; i++)
-                {
-                    var sport = sports[random.Next(sports.Count)];
-
-                    var possibleTrainerId = sportTrainers.FirstOrDefault(st => st.SportId == sport.Id)?.TrainerId;
-
-                    context.Reservations.Add(new Reservation
-                    {
-                        ClientId = clients[random.Next(clients.Length)],
-                        SportId = sport.Id,
-                        TrainerId = possibleTrainerId ?? 1,
-                        ReservationDateTime = DateTime.UtcNow.AddDays(-random.Next(1, 30)).AddHours(random.Next(8, 20)),
-                        Duration = sport.Duration,
-                        NumberOfPeople = random.Next(sport.MinPeople, sport.MaxPeople + 1)
-                    });
-                }
-                await context.SaveChangesAsync();
-            }
-
-            if (!await context.SpaReservations.AnyAsync() && client1 != null)
-            {
-                var spas = await context.SpaServices.ToListAsync();
-                var random = new Random();
-
-                for (int i = 0; i < 10; i++)
-                {
-                    context.SpaReservations.Add(new SpaReservation
-                    {
-                        ClientId = client1.Id,
-                        SpaServiceId = spas[random.Next(spas.Count)].Id,
-                        ReservationDateTime = DateTime.UtcNow.AddDays(-random.Next(1, 30)).AddHours(random.Next(10, 18))
-                    });
-                }
-                await context.SaveChangesAsync();
-            }
-
-            if (!await context.TournamentRegistrations.AnyAsync() && client1 != null && client2 != null)
-            {
-                var tournaments = await context.Tournaments.ToListAsync();
-                foreach (var tournament in tournaments)
-                {
-                    context.TournamentRegistrations.Add(new TournamentRegistration { ClientId = client1.Id, TournamentId = tournament.Id });
-                    context.TournamentRegistrations.Add(new TournamentRegistration { ClientId = client2.Id, TournamentId = tournament.Id });
-                }
-                await context.SaveChangesAsync();
-            }
         }
 
         private static async Task<Client?> CreateUserWithRoleAsync(UserManager<Client> userManager, string email, string password, string role, string firstName, string lastName)
