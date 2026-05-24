@@ -1,0 +1,198 @@
+﻿@using SportComplexApp.Web.ViewModels.Sport
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model SportReservationFormViewModel
+
+@{
+    ViewData["Title"] = Localizer["Title"];
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card card-dark shadow-lg border-0 rounded-4">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="mb-1 text-center" style="color:#00ffc8;">@Localizer["Heading"]</h2>
+                    <p class="text-center text-muted mb-4">@Localizer["SportPrefix"] <span class="text-white">@Model.SportName</span></p>
+
+                    @if (!ViewData.ModelState.IsValid && ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+                    {
+                        <div class="alert alert-danger">
+                            @foreach (var error in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <div>@error.ErrorMessage</div>
+                            }
+                        </div>
+                    }
+
+                    <form asp-action="Reserve" method="post" novalidate>
+                        <input type="hidden" asp-for="SportId" />
+                        <input type="hidden" asp-for="SportName" />
+
+                        <div class="mb-3">
+                            <label class="form-label text-light">
+                                <i class="bi bi-building me-1"></i> @Localizer["FacilityLabel"]
+                            </label>
+                            <div class="input-group neon-input facility-hover-area">
+                                <span class="input-group-text neon-icon"><i class="bi bi-geo-alt text-white"></i></span>
+                                <input asp-for="FacilityName" class="form-control text-white fw-bold bg-dark" readonly />
+        
+                                <div class="img-preview-box bg-dark">
+                                    @if (!string.IsNullOrEmpty(Model.FacilityImageUrl))
+                                    {
+                                        <img src="@Model.FacilityImageUrl" alt="Facility Image" style="width: 100%; height: 180px; object-fit: cover;" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="ReservationDateTime" class="form-label">
+                                    <i class="bi bi-calendar-event me-1"></i> @Localizer["DateTimeLabel"]
+                                </label>
+                                <input asp-for="ReservationDateTime"
+                                       class="form-control dtl-themed"
+                                       type="datetime-local"
+                                       step="900" />
+                                <span asp-validation-for="ReservationDateTime" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="Duration" class="form-label">@Localizer["DurationLabel"]</label>
+                                <div class="input-group neon-input">
+                                    <span class="input-group-text neon-icon"><i class="bi bi-stopwatch"></i></span>
+                                    <input asp-for="Duration"
+                                           min="@Model.MinDuration"
+                                           max="@Model.MaxDuration"
+                                           class="form-control" />
+                                </div>
+                                <div class="form-text text-muted">@Localizer["AllowedText"]: @Model.MinDuration–@Model.MaxDuration @Localizer["Minutes"].</div>
+                                <span asp-validation-for="Duration" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="NumberOfPeople" class="form-label">@Localizer["PeopleLabel"]</label>
+                                <div class="input-group neon-input">
+                                    <span class="input-group-text neon-icon"><i class="bi bi-people"></i></span>
+                                    <input asp-for="NumberOfPeople"
+                                           type="number"
+                                           min="@Model.MinPeople"
+                                           max="@Model.MaxPeople"
+                                           class="form-control" />
+                                </div>
+                                <div class="form-text text-muted">@Localizer["AllowedText"]: @Model.MinPeople–@Model.MaxPeople @Localizer["PeopleWord"].</div>
+                                <span asp-validation-for="NumberOfPeople" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label class="form-label">@Localizer["TrainerLabel"]</label>
+    
+                                <input type="hidden" asp-for="TrainerId" id="actualTrainerInput" />
+
+                                <div class="input-group neon-input facility-hover-area">
+                                    <span class="input-group-text neon-icon"><i class="bi bi-person-badge"></i></span>
+        
+                                    <button class="form-control text-start bg-dark text-white dropdown-toggle" type="button" id="trainerDropdownBtn" data-bs-toggle="dropdown" aria-expanded="false" style="border-color: rgba(0,255,200,.35);">
+                                        @Localizer["SelectTrainer"]
+                                    </button>
+        
+                                    <ul class="dropdown-menu dropdown-menu-dark w-100" aria-labelledby="trainerDropdownBtn" id="trainerDropdownList">
+                                        <li><a class="dropdown-item trainer-option" href="#" data-id="" data-image="">@Localizer["SelectTrainer"]</a></li>
+                                        @foreach (var trainer in Model.Trainers)
+                                        {
+                                            <li>
+                                                <a class="dropdown-item trainer-option" href="#" data-id="@trainer.Id" data-image="@trainer.ImageUrl">
+                                                    @trainer.FullName
+                                                </a>
+                                            </li>
+                                        }
+                                    </ul>
+
+                                    <div class="trainer-preview-box bg-dark">
+                                        <img id="trainerImgPreview" src="" alt="Trainer" style="width: 100%; height: 180px; object-fit: cover; display: none;" />
+                                        <div id="trainerNoImg" class="d-flex align-items-center justify-content-center h-100 p-4">
+                                            <i class="bi bi-person display-3 text-light-50"></i>
+                                        </div>
+                                    </div>
+                                </div>
+                                <span asp-validation-for="TrainerId" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between gap-2 mt-4">
+                            <a asp-action="All" class="btn btn-outline-neon">
+                                <i class="bi bi-arrow-left-circle me-1"></i> @Localizer["BtnCancel"]
+                            </a>
+                            <button type="submit" class="btn btn-neon">
+                                <i class="bi bi-check-circle me-1"></i> @Localizer["BtnSubmit"]
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="px-4 pb-4">
+                    <div class="border-top" style="border-color:rgba(255,255,255,.08)!important;"></div>
+                    <div class="d-flex flex-wrap gap-2 mt-3 small text-muted">
+                        <span class="badge badge-soft"><i class="bi bi-shield-check me-1"></i> @Localizer["BadgeSecure"]</span>
+                        <span class="badge badge-soft"><i class="bi bi-lightning-charge me-1"></i> @Localizer["BadgeInstant"]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const actualInput = document.getElementById('actualTrainerInput');
+            const dropdownBtn = document.getElementById('trainerDropdownBtn');
+            const options = document.querySelectorAll('.trainer-option');
+            const dropdownList = document.getElementById('trainerDropdownList');
+            
+            const imgPreview = document.getElementById('trainerImgPreview');
+            const noImgPlaceholder = document.getElementById('trainerNoImg');
+
+            let selectedImageUrl = "";
+
+            function showImage(url) {
+                if (url && url !== "") {
+                    imgPreview.src = url;
+                    imgPreview.style.display = 'block';
+                    noImgPlaceholder.style.display = 'none';
+                } else {
+                    imgPreview.style.display = 'none';
+                    noImgPlaceholder.style.display = 'flex';
+                }
+            }
+
+            options.forEach(option => {
+                option.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    
+                    const id = this.getAttribute('data-id');
+                    const text = this.innerText;
+                    const img = this.getAttribute('data-image');
+
+                    actualInput.value = id;
+                    dropdownBtn.innerText = text;
+                    
+                    selectedImageUrl = img;
+                    showImage(selectedImageUrl);
+                });
+
+                option.addEventListener('mouseenter', function () {
+                    const hoverImg = this.getAttribute('data-image');
+                    showImage(hoverImg);
+                });
+            });
+
+            dropdownList.addEventListener('mouseleave', function () {
+                showImage(selectedImageUrl);
+            });
+        });
+    </script>
+}

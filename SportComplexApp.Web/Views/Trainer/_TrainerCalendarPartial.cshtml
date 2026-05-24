@@ -1,0 +1,80 @@
+﻿@using SportComplexApp.Web.ViewModels.Trainer
+@model TrainerDetailsViewModel
+
+@{
+    var rawMonthName = System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(Model.CurrentMonth);
+    var monthName = char.ToUpper(rawMonthName[0]) + rawMonthName.Substring(1);
+    var firstDayOfMonth = new DateTime(Model.CurrentYear, Model.CurrentMonth, 1);
+    var daysInMonth = DateTime.DaysInMonth(Model.CurrentYear, Model.CurrentMonth);
+    int startDayOfWeek = ((int)firstDayOfMonth.DayOfWeek + 6) % 7;
+
+    var prevMonth = Model.CurrentMonth == 1 ? 12 : Model.CurrentMonth - 1;
+    var prevYear = Model.CurrentMonth == 1 ? Model.CurrentYear - 1 : Model.CurrentYear;
+    var nextMonth = Model.CurrentMonth == 12 ? 1 : Model.CurrentMonth + 1;
+    var nextYear = Model.CurrentMonth == 12 ? Model.CurrentYear + 1 : Model.CurrentYear;
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 bg-dark p-3 rounded-4 border border-secondary border-opacity-25 shadow-sm">
+    <button onclick="loadCalendar(@Model.Id, @prevMonth, @prevYear)" class="btn btn-outline-neon">
+        <i class="bi bi-chevron-left"></i>
+    </button>
+    
+    <h4 class="mb-0 text-center" style="color:#00ffc8;">
+        @monthName @Model.CurrentYear
+    </h4>
+    
+    <button onclick="loadCalendar(@Model.Id, @nextMonth, @nextYear)" class="btn btn-outline-neon">
+        <i class="bi bi-chevron-right"></i>
+    </button>
+</div>
+
+<div class="card card-dark p-3 border-0 rounded-4 shadow-lg mb-5">
+    <div class="row row-cols-7 text-center fw-bold text-muted mb-2 small">
+        <div class="col">Mon</div><div class="col">Tue</div><div class="col">Wed</div>
+        <div class="col">Thu</div><div class="col">Fri</div><div class="col">Sat</div><div class="col">Sun</div>
+    </div>
+
+    <div class="row row-cols-7 g-2">
+        @for (int i = 0; i < startDayOfWeek; i++)
+        {
+            <div class="col"><div class="bg-transparent border-0 h-100" style="min-height: 120px;"></div></div>
+        }
+
+        @for (int day = 1; day <= daysInMonth; day++)
+        {
+            var currentDayDate = new DateTime(Model.CurrentYear, Model.CurrentMonth, day);
+            var dayReservations = Model.Reservations
+                .Where(r => r.ReservationDate.Date == currentDayDate.Date)
+                .OrderBy(r => r.ReservationDate).ToList();
+            
+            var isToday = currentDayDate.Date == DateTime.Today;
+
+            <div class="col">
+                <div class="card h-100 border border-secondary border-opacity-25 day-card @(isToday ? "border-info" : "") @(dayReservations.Any() ? "has-events" : "")"
+                     style="background-color: #0f1111; min-height: 140px;">
+                    
+                    <div class="p-1 px-2 border-bottom border-secondary border-opacity-10 d-flex justify-content-between align-items-center">
+                        <span class="small fw-bold @(isToday ? "text-info" : "text-muted")">@day</span>
+                        @if (dayReservations.Any())
+                        {
+                            <span class="badge badge-soft" style="font-size: 0.65rem;">@dayReservations.Count</span>
+                        }
+                    </div>
+                    
+                    <div class="p-1 overflow-auto style-scrollbar" style="max-height: 110px;">
+                        @foreach (var res in dayReservations)
+                        {
+                            var endTime = res.ReservationDate.AddMinutes(res.Duration);
+                            <div class="mb-1 p-1 rounded position-relative" style="background: rgba(0,255,200,0.05); border-left: 3px solid #00ffc8; font-size: 11px; line-height: 1.2;">
+                                <div class="fw-bold" style="color: #00ffc8;">@res.ReservationDate.ToString("HH:mm") - @endTime.ToString("HH:mm")</div>
+                                <div class="text-white text-truncate fw-semibold">
+                                    @res.SportName <span class="text-info fw-normal">| @res.FacilityName</span>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

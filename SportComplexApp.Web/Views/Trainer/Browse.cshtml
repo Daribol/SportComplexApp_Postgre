@@ -1,0 +1,229 @@
+﻿@using SportComplexApp.Web.ViewModels.Trainer
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model IEnumerable<AllTrainersViewModel>
+
+@{
+    ViewData["Title"] = Localizer["Title"];
+    var sportsSelect = (IEnumerable<SelectListItem>)ViewBag.Sports ?? Enumerable.Empty<SelectListItem>();
+    string q = ViewBag.Query as string ?? "";
+    int? selectedSportId = ViewBag.SelectedSportId as int?;
+}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h2 class="mb-0" style="color:#00ffc8;">@Localizer["Heading"]</h2>
+</div>
+
+<div class="card card-dark border-0 shadow-lg rounded-4 mb-4">
+    <div class="card-body">
+        <form method="get" asp-controller="Trainer" asp-action="Browse" class="mb-4">
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label for="q" class="form-label text-light">@Localizer["SearchName"]</label>
+                    <div class="input-group neon-input">
+                        <span class="input-group-text neon-icon"><i class="bi bi-search"></i></span>
+                        <input type="text" name="q" id="q" class="form-control" placeholder="@Localizer["SearchPlaceholder"]" value="@ViewBag.Query" />
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="sportId" class="form-label text-light">@Localizer["FilterSport"]</label>
+                    <div class="input-group neon-input">
+                        <span class="input-group-text neon-icon"><i class="bi bi-dribbble"></i></span>
+                        <select name="sportId" id="sportId" class="form-select" asp-items="@ViewBag.Sports">
+                            <option value="">@Localizer["SportPlaceholder"]</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3">
+                    <label for="sortBy" class="form-label text-light">@Localizer["SortBy"]</label>
+                    <div class="input-group neon-input">
+                        <span class="input-group-text neon-icon"><i class="bi bi-sort-down"></i></span>
+                        <select name="sortBy" id="sortBy" class="form-select">
+                            <option value="">@Localizer["SortDefault"]</option>
+                            <option value="name_asc" selected="@(ViewBag.SortBy == "name_asc")">@Localizer["SortNameAsc"]</option>
+                            <option value="name_desc" selected="@(ViewBag.SortBy == "name_desc")">@Localizer["SortNameDesc"]</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="col-md-3 d-flex gap-2">
+                    <button type="submit" class="btn btn-outline-neon flex-grow-1">
+                        <i class="bi bi-funnel-fill"></i> @Localizer["BtnFilter"]
+                    </button>
+                    <a asp-action="Browse" class="btn btn-outline-neon">
+                        <i class="bi bi-x-circle"></i> @Localizer["BtnClear"]
+                    </a>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+@if (!Model.Any())
+{
+    <div class="card card-dark text-center p-5 rounded-4 border-0">
+        <div class="display-6 mb-2">🧑‍🏫</div>
+        <h5 class="mb-1 text-light">@Localizer["NoTrainersTitle"]</h5>
+        <p class="text-light-50 mb-0">@Localizer["NoTrainersDesc"]</p>
+    </div>
+}
+else
+{
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        @foreach (var t in Model)
+        {
+            var hasImg = !string.IsNullOrWhiteSpace(t.ImageUrl);
+            <div class="col">
+                <div class="card card-dark hover h-100 border-0 rounded-4">
+                    @if (hasImg)
+                    {
+                        <div class="cover ratio ratio-16x9" style="background-image:url('@t.ImageUrl');"></div>
+                    }
+                    else
+                    {
+                        <div class="cover cover--placeholder ratio ratio-16x9 d-flex align-items-center justify-content-center">
+                            <i class="bi bi-person-bounding-box display-6 text-light-50"></i>
+                        </div>
+                    }
+
+                    <div class="card-body d-flex flex-column">
+                        <div class="d-flex align-items-start justify-content-between mb-2">
+                            <h5 class="card-title mb-0 text-white">@t.Name @t.LastName</h5>
+                            <span class="badge badge-soft"><i class="bi bi-award me-1"></i> @Localizer["TrainerBadge"]</span>
+                        </div>
+
+                        <div class="mb-3">
+                            @if (t.Sports?.Any() == true)
+                            {
+                                foreach (var s in t.Sports)
+                                {
+                                    <span class="badge badge-sport me-1 mb-1">@s</span>
+                                }
+                            }
+                            else
+                            {
+                                <span class="text-light-50">@Localizer["NoSportsAssigned"]</span>
+                            }
+                        </div>
+
+                        <div class="mt-auto d-flex flex-column gap-2">
+                            <div class="d-flex gap-2">
+                                <a asp-action="Details" asp-route-id="@t.Id" class="btn btn-outline-neon btn-sm w-100">
+                                    <i class="bi bi-person-vcard"></i> @Localizer["BtnDetails"]
+                                </a>
+                                <a asp-controller="Sport" asp-action="All" asp-route-trainerId="@t.Id" class="btn btn-neon btn-sm w-100">
+                                    <i class="bi bi-calendar-plus"></i> @Localizer["BtnBook"]
+                                </a>
+                            </div>
+                            
+                            <button class="btn btn-outline-info btn-sm w-100 d-flex align-items-center justify-content-center toggle-schedule-btn" type="button" data-bs-toggle="collapse" data-bs-target="#schedule-@t.Id" aria-expanded="false">
+                                <i class="bi bi-calendar-week me-2"></i> @Localizer["BtnViewSchedule"] <i class="bi bi-chevron-down ms-auto chevron-icon"></i>
+                            </button>
+                        </div>
+
+                        <div class="collapse mt-3" id="schedule-@t.Id">
+                            <div class="p-2 rounded bg-dark border border-info border-opacity-25">
+                                @if (t.Reservations != null && t.Reservations.Any())
+                                {
+                                    <table class="table table-sm table-dark table-borderless mb-0" style="font-size: 0.85rem;">
+                                        <thead class="text-info border-bottom border-secondary">
+                                            <tr>
+                                                <th>@Localizer["SubColumnAvailability"]</th>
+                                                <th>@Localizer["SubColumnDate"]</th>
+                                                <th>@Localizer["SubColumnTime"]</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @foreach (var res in t.Reservations.OrderBy(r => r.ReservationDate))
+                                            {
+                                                <tr>
+                                                    <td><span class="badge bg-secondary">Booked</span></td>
+                                                    <td>@res.ReservationDate</td>
+                                                    <td class="text-neon">@res.TimeSlot</td>
+                                                </tr>
+                                            }
+                                        </tbody>
+                                    </table>
+                                }
+                                else
+                                {
+                                    <div class="text-center text-muted small py-2">
+                                        <i class="bi bi-calendar-x"></i> @Localizer["NoReservationsAvailable"]
+                                    </div>
+                                }
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+@if (ViewBag.TotalPages > 1)
+{
+    <nav aria-label="Page navigation" class="mt-5 mb-4">
+        <ul class="pagination sc-pagination justify-content-center gap-2">
+            
+            <li class="page-item @(ViewBag.CurrentPage == 1 ? "disabled" : "")">
+                <a class="page-link rounded-pill px-3 shadow-sm bg-dark text-light border-secondary"
+                       asp-action="Browse"
+                       asp-route-q="@ViewBag.Query"
+                       asp-route-sportId="@ViewBag.SelectedSportId"
+                       asp-route-sortBy="@ViewBag.SortBy"
+                       asp-route-page="@(ViewBag.CurrentPage - 1)">
+                    <i class="bi bi-chevron-left small me-1"></i> @Localizer["Back"]
+                </a>
+            </li>
+
+            @for (int i = 1; i <= ViewBag.TotalPages; i++)
+            {
+                <li class="page-item @(i == ViewBag.CurrentPage ? "active" : "")">
+                    <a class="page-link rounded-circle shadow-sm d-flex align-items-center justify-content-center"
+                           style="width: 40px; height: 40px;"
+                           asp-action="Browse"
+                           asp-route-q="@ViewBag.Query"
+                           asp-route-sportId="@ViewBag.SelectedSportId"
+                           asp-route-sortBy="@ViewBag.SortBy"
+                           asp-route-page="@i">
+                        @i
+                    </a>
+                </li>
+            }
+
+            <li class="page-item @(ViewBag.CurrentPage == ViewBag.TotalPages ? "disabled" : "")">
+                <a class="page-link rounded-pill px-3 shadow-sm bg-dark text-light border-secondary"
+                       asp-action="Browse"
+                       asp-route-q="@ViewBag.Query"
+                       asp-route-sportId="@ViewBag.SelectedSportId"
+                       asp-route-sortBy="@ViewBag.SortBy"
+                       asp-route-page="@(ViewBag.CurrentPage + 1)">
+                    @Localizer["Next"] <i class="bi bi-chevron-right small ms-1"></i>
+                </a>
+            </li>
+            
+        </ul>
+    </nav>
+}
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+    
+    <style>
+        .toggle-schedule-btn .chevron-icon {
+            transition: transform 0.3s ease;
+        }
+
+        .toggle-schedule-btn[aria-expanded="true"] .chevron-icon {
+            transform: rotate(180deg);
+        }
+
+        .text-neon {
+            color: #00ffc8;
+        }
+    </style>
+}

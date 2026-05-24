@@ -1,0 +1,41 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = Localizer["Title"];
+}
+
+<div class="d-flex flex-column align-items-center justify-content-center text-center py-5">
+    <h1 class="display-1 fw-bold text-neon">500</h1>
+    <p class="fs-3 text-light">
+        <i class="bi bi-exclamation-triangle-fill text-danger me-2"></i>
+        @Localizer["Oops"] <span class="text-danger">@Localizer["SomethingWentWrong"]</span>.
+    </p>
+    <p class="lead text-muted mb-4">@Localizer["Description"]</p>
+    <a href="/" class="btn btn-outline-neon btn-lg rounded-pill">
+        <i class="bi bi-house-door-fill me-1"></i> @Localizer["GoHome"]
+    </a>
+</div>
+
+@section Scripts {
+    <style>
+        .text-neon {
+            color: #00ffc8;
+            text-shadow: 0 0 8px #00ffc8, 0 0 16px rgba(0, 255, 200, 0.8);
+        }
+
+        .btn-outline-neon {
+            border: 1px solid #00ffc8;
+            color: #00ffc8;
+            font-weight: 600;
+            transition: 0.2s;
+        }
+
+            .btn-outline-neon:hover {
+                background: #00ffc8;
+                color: #000;
+                box-shadow: 0 0 12px #00ffc8;
+            }
+    </style>
+}

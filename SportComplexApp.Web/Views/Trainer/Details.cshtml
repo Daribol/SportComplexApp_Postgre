@@ -1,0 +1,129 @@
+﻿@using SportComplexApp.Web.ViewModels.Trainer
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model TrainerDetailsViewModel
+
+@{
+    ViewData["Title"] = Localizer["Title"];
+    var hasImage = !string.IsNullOrWhiteSpace(Model.ImageUrl);
+}
+
+<link rel="stylesheet" href="~/css/neon-theme.css" asp-append-version="true" />
+
+<div class="container mt-4">
+
+    <div class="trainer-hero interactive-hero position-relative rounded-4 overflow-hidden shadow-lg mb-4"
+         style="background-image:
+        @(hasImage
+            ? $"linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.6)), url('{Model.ImageUrl}')"
+            : "linear-gradient(180deg, rgba(0,0,0,.35), rgba(0,0,0,.6)), radial-gradient(80% 60% at 20% 10%, rgba(0,255,200,.15), transparent), linear-gradient(135deg,#1f1f1f,#2a2a2a)");">
+        
+        <div class="ratio ratio-21x9"></div>
+
+        <div class="trainer-avatar position-absolute bottom-0 start-0 translate-middle-y ms-4 mb-3">
+            @if (hasImage)
+            {
+                <img src="@Model.ImageUrl" alt="@Model.Name @Model.LastName"
+                     class="rounded-circle border border-3 border-dark-subtle shadow avatar-glow"
+                     style="width:110px; height:110px; object-fit:cover;" />
+            }
+            else
+            {
+                <div class="rounded-circle d-flex align-items-center justify-content-center border border-3 border-dark-subtle shadow avatar-glow"
+                     style="width:110px; height:110px; background: linear-gradient(135deg,#00ffc8,#b4ffe9); color:#000;">
+                    <i class="bi bi-person-bounding-box" style="font-size:2rem;"></i>
+                </div>
+            }
+        </div>
+
+        <div class="position-absolute bottom-0 start-0 ms-4 mb-3" style="padding-left: 130px;">
+            <h1 class="h3 mb-1 text-white fw-semibold trainer-name-glow">@Model.Name @Model.LastName</h1>
+            <div>
+                @if (Model.Sports != null && Model.Sports.Any())
+                {
+                    foreach (var sport in Model.Sports)
+                    {
+                        <span class="badge badge-sport me-1 mb-1">@sport</span>
+                    }
+                }
+                else
+                {
+                    <span class="badge badge-soft">@Localizer["NoSportsAssigned"]</span>
+                }
+            </div>
+        </div>
+    </div>
+
+    <div class="card card-dark interactive-card border border-secondary border-opacity-25 shadow-lg rounded-4 mb-5">
+        <div class="card-body p-4 p-md-5">
+            <h2 class="h5 mb-3" style="color:#00ffc8;">
+                <i class="bi bi-info-circle me-2"></i>@Localizer["AboutHeading"]
+            </h2>
+
+            @if (!string.IsNullOrWhiteSpace(Model.Bio))
+            {
+                <p class="mb-0 text-light-50" style="line-height: 1.7; font-size: 1.05rem;">@Model.Bio</p>
+            }
+            else
+            {
+                <p class="text-muted mb-0">@Localizer["NoBioMsg"]</p>
+            }
+        </div>
+
+        <div class="card-footer bg-transparent border-0 d-flex justify-content-between align-items-center px-4 px-md-5 pb-4">
+            <a href="javascript:history.back()" class="btn btn-outline-neon btn-sm">
+                <i class="bi bi-arrow-left-circle me-1"></i> @Localizer["BtnBack"]
+            </a>
+        </div>
+    </div>
+
+    <h3 class="mb-3 mt-5 text-center" style="color:#00ffc8;">@Localizer["TrainerSchedule"]</h3>
+    
+    <div id="calendar-container">
+        <partial name="_TrainerCalendarPartial" model="Model" />
+    </div>
+
+</div> 
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script>
+        function loadCalendar(trainerId, month, year) {
+            const container = document.getElementById('calendar-container');
+            container.style.opacity = '0.5';
+
+            fetch(`/Trainer/GetCalendarPartial?id=${trainerId}&month=${month}&year=${year}`)
+                .then(response => {
+                    if (!response.ok) throw new Error('Грешка при зареждане');
+                    return response.text();
+                })
+                .then(html => {
+                    container.innerHTML = html;
+                    container.style.opacity = '1';
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    container.style.opacity = '1';
+                });
+        }
+    </script>
+    
+    <style>
+        .trainer-hero { background-size: cover; background-position: center; }
+        .interactive-card { transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease, border-color 0.3s ease; }
+        .interactive-card:hover { transform: scale(1.02) translateY(-5px); box-shadow: 0 20px 40px rgba(0,0,0,0.8), 0 0 25px rgba(0, 255, 200, 0.2) !important; border-color: rgba(0, 255, 200, 0.5) !important; }
+        .avatar-glow { transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+        .interactive-hero:hover .avatar-glow { transform: scale(1.1) rotate(3deg); box-shadow: 0 0 25px rgba(0, 255, 200, 0.6) !important; border-color: #00ffc8 !important; }
+        .trainer-name-glow { transition: text-shadow 0.3s ease; }
+        .interactive-hero:hover .trainer-name-glow { text-shadow: 0 0 15px rgba(0, 255, 200, 0.5); }
+
+        .row-cols-7 > * { flex: 0 0 auto; width: 14.2857142857%; }
+        .style-scrollbar::-webkit-scrollbar { width: 4px; }
+        .style-scrollbar::-webkit-scrollbar-thumb { background-color: rgba(0, 255, 200, 0.3); border-radius: 4px; }
+        
+        .day-card { transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s ease, border-color 0.2s ease; z-index: 1; position: relative; }
+        .day-card.has-events:hover { transform: scale(1.5); z-index: 100; box-shadow: 0 20px 40px rgba(0,0,0,0.95), 0 0 20px rgba(0, 255, 200, 0.4) !important; background-color: #161a1a !important; border-color: rgba(0, 255, 200, 0.8) !important; cursor: pointer; }
+        .day-card.has-events:hover .p-1.overflow-auto { max-height: none !important; overflow: visible !important; }
+        .day-card.has-events:hover .text-truncate { white-space: normal !important; word-break: break-word; }
+    </style>
+}

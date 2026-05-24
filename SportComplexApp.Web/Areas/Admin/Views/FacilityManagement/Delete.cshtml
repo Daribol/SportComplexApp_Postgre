@@ -1,0 +1,39 @@
+﻿@using SportComplexApp.Web.ViewModels.Facility
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model DeleteFacilityViewModel
+
+@{
+    ViewData["Title"] = Localizer["Title"];
+}
+
+<div class="card card-dark border-danger shadow-lg rounded-4 mb-4">
+    <div class="card-body p-4">
+        <h2 class="mb-3" style="color:#ff4d4d;">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> @Localizer["Heading"]
+        </h2>
+
+        <div class="alert alert-warning border-warning text-dark">
+            <strong>@Localizer["WarningPrefix"]</strong> @Localizer["WarningMsg1"]
+            <span class="fw-bold text-danger">@Model.Name</span>. @Localizer["WarningMsg2_1"] <u>@Localizer["WarningMsg2_2"]</u> @Localizer["WarningMsg2_3"]
+        </div>
+
+        <form asp-action="DeleteConfirmed" method="post">
+            <input type="hidden" asp-for="Id" />
+
+            <div class="d-flex justify-content-start gap-2 mt-3">
+                <button type="submit" class="btn btn-outline-danger">
+                    <i class="bi bi-trash me-1"></i> @Localizer["BtnDelete"]
+                </button>
+                <a asp-action="All" class="btn btn-outline-neon">
+                    <i class="bi bi-x-circle"></i> @Localizer["BtnCancel"]
+                </a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+}

@@ -1,0 +1,75 @@
+﻿@page
+@model RegisterModel
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["Title"];
+}
+
+<div class="container d-flex justify-content-center align-items-center" style="min-height: 90vh;">
+    <div class="card card-dark shadow-lg p-4 rounded-4" style="width: 100%; max-width: 520px;">
+        <div class="text-center mb-4">
+            <i class="bi bi-person-plus" style="font-size: 3.5rem; color: #00ffc8;"></i>
+            <h2 class="mt-2" style="color:#00ffc8;">@Localizer["Title"]</h2>
+            <p class="text-muted mb-0">@Localizer["Subtitle"]</p>
+        </div>
+
+        <form id="registerForm" asp-route-returnUrl="@Model.ReturnUrl" method="post" novalidate>
+            <div asp-validation-summary="All" class="text-danger mb-3"></div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="Input.FirstName" class="form-control neon-input" placeholder="First Name" />
+                        <label class="text-light">@Localizer["FirstName"]</label>
+                        <span asp-validation-for="Input.FirstName" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-floating">
+                        <input asp-for="Input.LastName" class="form-control neon-input" placeholder="Last Name" />
+                        <label class="text-light">@Localizer["LastName"]</label>
+                        <span asp-validation-for="Input.LastName" class="text-danger"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-floating mt-3">
+                <input asp-for="Input.Email" class="form-control neon-input" placeholder="name@example.com" />
+                <label class="text-light">@Localizer["Email"]</label>
+                <span asp-validation-for="Input.Email" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mt-3">
+                <input asp-for="Input.Password" type="password" class="form-control neon-input" placeholder="Password" />
+                <label class="text-light">@Localizer["Password"]</label>
+                <span asp-validation-for="Input.Password" class="text-danger"></span>
+            </div>
+
+            <div class="form-floating mt-3">
+                <input asp-for="Input.ConfirmPassword" type="password" class="form-control neon-input" placeholder="Confirm Password" />
+                <label class="text-light">@Localizer["ConfirmPassword"]</label>
+                <span asp-validation-for="Input.ConfirmPassword" class="text-danger"></span>
+            </div>
+
+            <div class="d-flex align-items-center gap-2 mt-3 text-muted">
+                <i class="bi bi-shield-lock"></i>
+                <small>@Localizer["PasswordHint"]</small>
+            </div>
+
+            <button id="registerSubmit" type="submit" class="btn btn-neon w-100 btn-lg rounded-pill mt-4">
+                @Localizer["RegisterBtn"]
+            </button>
+
+            <div class="text-center mt-3">
+                <small class="text-muted">@Localizer["AlreadyHaveAccount"]</small>
+                <a asp-area="Identity" asp-page="/Account/Login" class="ms-1 text-decoration-none" style="color:#00ffc8;">@Localizer["LoginLink"]</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}

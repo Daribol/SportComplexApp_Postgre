@@ -1,0 +1,405 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <!-- 
+    Microsoft ResX Schema 
+    
+    Version 2.0
+    
+    The primary goals of this format is to allow a simple XML format 
+    that is mostly human readable. The generation and parsing of the 
+    various data types are done through the TypeConverter classes 
+    associated with the data types.
+    
+    Example:
+    
+    ... ado.net/XML headers & schema ...
+    <resheader name="resmimetype">text/microsoft-resx</resheader>
+    <resheader name="version">2.0</resheader>
+    <resheader name="reader">System.Resources.ResXResourceReader, System.Windows.Forms, ...</resheader>
+    <resheader name="writer">System.Resources.ResXResourceWriter, System.Windows.Forms, ...</resheader>
+    <data name="Name1"><value>this is my long string</value><comment>this is a comment</comment></data>
+    <data name="Color1" type="System.Drawing.Color, System.Drawing">Blue</data>
+    <data name="Bitmap1" mimetype="application/x-microsoft.net.object.binary.base64">
+        <value>[base64 mime encoded serialized .NET Framework object]</value>
+    </data>
+    <data name="Icon1" type="System.Drawing.Icon, System.Drawing" mimetype="application/x-microsoft.net.object.bytearray.base64">
+        <value>[base64 mime encoded string representing a byte array form of the .NET Framework object]</value>
+        <comment>This is a comment</comment>
+    </data>
+                
+    There are any number of "resheader" rows that contain simple 
+    name/value pairs.
+    
+    Each data row contains a name, and value. The row also contains a 
+    type or mimetype. Type corresponds to a .NET class that support 
+    text/value conversion through the TypeConverter architecture. 
+    Classes that don't support this are serialized and stored with the 
+    mimetype set.
+    
+    The mimetype is used for serialized objects, and tells the 
+    ResXResourceReader how to depersist the object. This is currently not 
+    extensible. For a given mimetype the value must be set accordingly:
+    
+    Note - application/x-microsoft.net.object.binary.base64 is the format 
+    that the ResXResourceWriter will generate, however the reader can 
+    read any of the formats listed below.
+    
+    mimetype: application/x-microsoft.net.object.binary.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Binary.BinaryFormatter
+            : and then encoded with base64 encoding.
+    
+    mimetype: application/x-microsoft.net.object.soap.base64
+    value   : The object must be serialized with 
+            : System.Runtime.Serialization.Formatters.Soap.SoapFormatter
+            : and then encoded with base64 encoding.
+
+    mimetype: application/x-microsoft.net.object.bytearray.base64
+    value   : The object must be serialized into a byte array 
+            : using a System.ComponentModel.TypeConverter
+            : and then encoded with base64 encoding.
+    -->
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/XML/1998/namespace" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" msdata:Ordinal="1" />
+              <xsd:attribute name="type" type="xsd:string" msdata:Ordinal="3" />
+              <xsd:attribute name="mimetype" type="xsd:string" msdata:Ordinal="4" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" type="xsd:string" use="required" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype">
+    <value>text/microsoft-resx</value>
+  </resheader>
+  <resheader name="version">
+    <value>2.0</value>
+  </resheader>
+  <resheader name="reader">
+    <value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <resheader name="writer">
+    <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
+  </resheader>
+  <data name="CancelReservationUnauthorized" xml:space="preserve">
+    <value>Резервацията не е намерена или нямате права да я отмените.</value>
+  </data>
+  <data name="CannotUnregister" xml:space="preserve">
+    <value>Не можете да отмените регистрацията си. Турнирът е активен.</value>
+  </data>
+  <data name="ConcurrencyError" xml:space="preserve">
+    <value>Данните бяха променени от друг потребител, докато вие ги редактирахте. Моля, презаредете страницата и опитайте отново.</value>
+  </data>
+  <data name="CsvSpaServiceName" xml:space="preserve">
+    <value>Име на спа услуга</value>
+  </data>
+  <data name="CsvSportName" xml:space="preserve">
+    <value>Име на спорт</value>
+  </data>
+  <data name="CsvTotalReservations" xml:space="preserve">
+    <value>Общо резервации</value>
+  </data>
+  <data name="CsvTotalRevenue" xml:space="preserve">
+    <value>Общ приход (лв.)</value>
+  </data>
+  <data name="CsvTotalRow" xml:space="preserve">
+    <value>ОБЩО</value>
+  </data>
+  <data name="CsvTotalVisitors" xml:space="preserve">
+    <value>Общо посетители</value>
+  </data>
+  <data name="DescriptionRequirenments" xml:space="preserve">
+    <value>Описанието трябва да бъде между 10 и 1000 символа.</value>
+  </data>
+  <data name="FacilityAdded" xml:space="preserve">
+    <value>Съоръжението беше успешно добавено.</value>
+  </data>
+  <data name="FacilityAlreadyExists" xml:space="preserve">
+    <value>Съоръжение с това име вече съществува.</value>
+  </data>
+  <data name="FacilityDeleted" xml:space="preserve">
+    <value>Съоръжението беше успешно изтрито.</value>
+  </data>
+  <data name="FacilityHasSports" xml:space="preserve">
+    <value>Не може да изтриете съоръжение, към което има добавени спортове.</value>
+  </data>
+  <data name="FacilityNotFound" xml:space="preserve">
+    <value>Съоръжението не е намерено.</value>
+  </data>
+  <data name="FacilityUpdated" xml:space="preserve">
+    <value>Съоръжението беше успешно обновено.</value>
+  </data>
+  <data name="FailedToAssignRole" xml:space="preserve">
+    <value>Неуспешно добавяне на роля към потребителя.</value>
+  </data>
+  <data name="FailedToDeleteUser" xml:space="preserve">
+    <value>Неуспешно изтриване на потребител.</value>
+  </data>
+  <data name="FailedToRemoveRole" xml:space="preserve">
+    <value>Неуспешно премахване на роля от потребителя.</value>
+  </data>
+  <data name="LabelDescription" xml:space="preserve">
+    <value>Описание</value>
+  </data>
+  <data name="LabelDurationMinutes" xml:space="preserve">
+    <value>Продължителност (минути)</value>
+  </data>
+  <data name="LabelEndDate" xml:space="preserve">
+    <value>Крайна дата</value>
+  </data>
+  <data name="LabelFacilityName" xml:space="preserve">
+    <value>Име на съоръжение</value>
+  </data>
+  <data name="LabelImageUrl" xml:space="preserve">
+    <value>Линк към снимка</value>
+  </data>
+  <data name="LabelNumberOfPeople" xml:space="preserve">
+    <value>Брой хора</value>
+  </data>
+  <data name="LabelPrice" xml:space="preserve">
+    <value>Цена (лв.)</value>
+  </data>
+  <data name="LabelProcedureDetails" xml:space="preserve">
+    <value>Детайли за процедурата</value>
+  </data>
+  <data name="LabelReservationDateTime" xml:space="preserve">
+    <value>Дата и час на резервацията</value>
+  </data>
+  <data name="LabelSpaServiceName" xml:space="preserve">
+    <value>Име на спа услуга</value>
+  </data>
+  <data name="LabelSport" xml:space="preserve">
+    <value>Спорт</value>
+  </data>
+  <data name="LabelSportCount" xml:space="preserve">
+    <value>Брой спортове</value>
+  </data>
+  <data name="LabelStartDate" xml:space="preserve">
+    <value>Начална дата</value>
+  </data>
+  <data name="LabelTournamentName" xml:space="preserve">
+    <value>Име на турнира</value>
+  </data>
+  <data name="MaxNumberOfPeople" xml:space="preserve">
+    <value>Максималният брой хора трябва да бъде поне 1.</value>
+  </data>
+  <data name="MaxPeopleLessThanMin" xml:space="preserve">
+    <value>Максималният брой хора трябва да е по-голям или равен на минималния.</value>
+  </data>
+  <data name="MinNumberOfPeople" xml:space="preserve">
+    <value>Минималният брой хора трябва да бъде поне 1.</value>
+  </data>
+  <data name="MustSelectAtLeastOneSport" xml:space="preserve">
+    <value>Трябва да изберете поне един спорт за треньора.</value>
+  </data>
+  <data name="NameRequirenments" xml:space="preserve">
+    <value>Името трябва да бъде между 3 и 100 символа.</value>
+  </data>
+  <data name="NoTrainerAssigned" xml:space="preserve">
+    <value>Без треньор</value>
+  </data>
+  <data name="NumberOfPeopleOutOfRange" xml:space="preserve">
+    <value>Броят на хората трябва да бъде между 1 и 10.</value>
+  </data>
+  <data name="PriceTooLow" xml:space="preserve">
+    <value>Цената трябва да бъде поне 5.00 лв.</value>
+  </data>
+  <data name="ReservationConflict" xml:space="preserve">
+    <value>Вече имате резервация за този час.</value>
+  </data>
+  <data name="ReservationCreated" xml:space="preserve">
+    <value>Резервацията беше успешно създадена.</value>
+  </data>
+  <data name="ReservationDeleted" xml:space="preserve">
+    <value>Резервацията беше успешно изтрита.</value>
+  </data>
+  <data name="ReservationInPast" xml:space="preserve">
+    <value>Датата на резервация не може да бъде в миналото.</value>
+  </data>
+  <data name="ReservationOutsideWorkingHours" xml:space="preserve">
+    <value>Резервации са позволени само между 08:00 и 20:00 часа.</value>
+  </data>
+  <data name="ReservationTooFarInFuture" xml:space="preserve">
+    <value>Можете да правите резервации най-много 2 седмици напред.</value>
+  </data>
+  <data name="ReservationTooSoon" xml:space="preserve">
+    <value>Можете да направите резервация поне 1 час предварително.</value>
+  </data>
+  <data name="RoleAdmin" xml:space="preserve">
+    <value>Админ</value>
+  </data>
+  <data name="RoleAssigned" xml:space="preserve">
+    <value>Ролята беше успешно добавена към потребителя.</value>
+  </data>
+  <data name="RoleClient" xml:space="preserve">
+    <value>Клиент</value>
+  </data>
+  <data name="RoleRemoved" xml:space="preserve">
+    <value>Ролята беше успешно премахната от потребителя.</value>
+  </data>
+  <data name="RoleTrainer" xml:space="preserve">
+    <value>Треньор</value>
+  </data>
+  <data name="SpaReservationCreated" xml:space="preserve">
+    <value>Спа резервацията беше успешно създадена.</value>
+  </data>
+  <data name="SpaReservationDeleted" xml:space="preserve">
+    <value>Спа резервацията беше успешно изтрита.</value>
+  </data>
+  <data name="SpaServiceAlreadyExists" xml:space="preserve">
+    <value>Спа услуга с това име вече съществува.</value>
+  </data>
+  <data name="SpaServiceCreated" xml:space="preserve">
+    <value>Спа услугата беше успешно създадена.</value>
+  </data>
+  <data name="SpaServiceDeleted" xml:space="preserve">
+    <value>Спа услугата беше успешно изтрита.</value>
+  </data>
+  <data name="SpaServiceNotFound" xml:space="preserve">
+    <value>Спа услугата не е намерена.</value>
+  </data>
+  <data name="SpaServiceUpdated" xml:space="preserve">
+    <value>Спа услугата беше успешно обновена.</value>
+  </data>
+  <data name="SportAddedToMyList" xml:space="preserve">
+    <value>Спортът беше успешно добавен към вашия списък.</value>
+  </data>
+  <data name="SportAlreadyExists" xml:space="preserve">
+    <value>Спорт с това име вече съществува.</value>
+  </data>
+  <data name="SportCreated" xml:space="preserve">
+    <value>Спортът беше успешно създаден.</value>
+  </data>
+  <data name="SportDeleted" xml:space="preserve">
+    <value>Спортът беше успешно изтрит.</value>
+  </data>
+  <data name="SportNotFound" xml:space="preserve">
+    <value>Спортът не е намерен.</value>
+  </data>
+  <data name="SportRemovedFromMyList" xml:space="preserve">
+    <value>Спортът беше успешно премахнат от вашия списък.</value>
+  </data>
+  <data name="SportUpdated" xml:space="preserve">
+    <value>Спортът беше успешно обновен.</value>
+  </data>
+  <data name="The field {0} is invalid." xml:space="preserve">
+    <value>Стойността в полето "{0}" е невалидна.</value>
+  </data>
+  <data name="The field {0} must be a string with a minimum length of {2} and a maximum length of {1}." xml:space="preserve">
+    <value>Полето "{0}" трябва да съдържа между {2} и {1} символа.</value>
+  </data>
+  <data name="The field {0} must be between {1} and {2}." xml:space="preserve">
+    <value>Полето "{0}" трябва да бъде между {1} и {2}.</value>
+  </data>
+  <data name="The {0} field is not a valid e-mail address." xml:space="preserve">
+    <value>Полето "{0}" не съдържа валиден имейл адрес.</value>
+  </data>
+  <data name="The {0} field is required." xml:space="preserve">
+    <value>Полето "{0}" е задължително.</value>
+  </data>
+  <data name="TournamentAlreadyExists" xml:space="preserve">
+    <value>Турнир с това име вече съществува.</value>
+  </data>
+  <data name="TournamentAlreadyRegistered" xml:space="preserve">
+    <value>Вече сте регистрирани за този турнир.</value>
+  </data>
+  <data name="TournamentCreated" xml:space="preserve">
+    <value>Турнирът беше успешно създаден.</value>
+  </data>
+  <data name="TournamentDeleted" xml:space="preserve">
+    <value>Турнирът беше успешно изтрит.</value>
+  </data>
+  <data name="TournamentEndBeforeStart" xml:space="preserve">
+    <value>Краят на турнира не може да бъде преди началната дата.</value>
+  </data>
+  <data name="TournamentNotFound" xml:space="preserve">
+    <value>Турнирът не е намерен.</value>
+  </data>
+  <data name="TournamentRegistered" xml:space="preserve">
+    <value>Успешно се регистрирахте за турнира.</value>
+  </data>
+  <data name="TournamentRegistrationClosed" xml:space="preserve">
+    <value>Регистрацията за този турнир е затворена.</value>
+  </data>
+  <data name="TournamentStartInPast" xml:space="preserve">
+    <value>Началната дата на турнира не може да бъде в миналото.</value>
+  </data>
+  <data name="TournamentUnregistered" xml:space="preserve">
+    <value>Успешно отписахте участието си от турнира.</value>
+  </data>
+  <data name="TournamentUpdated" xml:space="preserve">
+    <value>Турнирът беше успешно обновен.</value>
+  </data>
+  <data name="TrainerAdded" xml:space="preserve">
+    <value>Треньорът беше успешно добавен.</value>
+  </data>
+  <data name="TrainerAlreadyExists" xml:space="preserve">
+    <value>Треньор с това име вече съществува.</value>
+  </data>
+  <data name="TrainerBusy" xml:space="preserve">
+    <value>Избраният треньор не е свободен в този час.</value>
+  </data>
+  <data name="TrainerCannotRegister" xml:space="preserve">
+    <value>Треньорите не могат да се регистрират за турнири.</value>
+  </data>
+  <data name="TrainerDeleted" xml:space="preserve">
+    <value>Треньорът беше успешно изтрит.</value>
+  </data>
+  <data name="TrainerNotFound" xml:space="preserve">
+    <value>Треньорът не е намерен.</value>
+  </data>
+  <data name="TrainerUpdated" xml:space="preserve">
+    <value>Треньорът беше успешно обновен.</value>
+  </data>
+  <data name="UnexpectedError" xml:space="preserve">
+    <value>Възникна неочаквана грешка:</value>
+  </data>
+  <data name="UserAlreadyInRole" xml:space="preserve">
+    <value>Потребителят вече има тази роля.</value>
+  </data>
+  <data name="UserDeleted" xml:space="preserve">
+    <value>Потребителят беше успешно изтрит.</value>
+  </data>
+  <data name="UserDoesNotExist" xml:space="preserve">
+    <value>Потребителят не съществува.</value>
+  </data>
+  <data name="UserIdOrRoleCannotBeEmpty" xml:space="preserve">
+    <value>Потребителското ID и ролята не могат да бъдат празни.</value>
+  </data>
+</root>

@@ -1,0 +1,185 @@
+﻿@using SportComplexApp.Web.ViewModels.Spa
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model SpaReservationFormViewModel
+
+@{
+    ViewData["Title"] = Localizer["Title"];
+}
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card card-dark shadow-lg border-0 rounded-4 overflow-hidden">
+                <div class="card-body p-4 p-md-5">
+                    <h2 class="mb-1 text-center" style="color:#00ffc8;">@Localizer["Heading"]</h2>
+                    <p class="text-center text-muted mb-4">@Localizer["ServicePrefix"] <span class="text-white">@Model.SpaServiceName</span></p>
+
+                    @if (!ViewData.ModelState.IsValid && ViewData.ModelState.Values.Any(v => v.Errors.Count > 0))
+                    {
+                        <div class="alert alert-danger">
+                            @foreach (var err in ViewData.ModelState.Values.SelectMany(v => v.Errors))
+                            {
+                                <div>@err.ErrorMessage</div>
+                            }
+                        </div>
+                    }
+
+                    <form asp-action="Reserve" method="post" novalidate>
+                        <input type="hidden" asp-for="SpaServiceId" />
+                        <input type="hidden" asp-for="SpaServiceName" />
+
+                        <div class="mb-3">
+                            <label class="form-label">@Localizer["ServiceLabel"]</label>
+                            <div class="input-group neon-input">
+                                <span class="input-group-text neon-icon"><i class="bi bi-flower3"></i></span>
+                                <input class="form-control" value="@Model.SpaServiceName" readonly />
+                            </div>
+                            <div class="form-text text-muted">@Localizer["ServiceHelp"]</div>
+                        </div>
+
+                        <div class="row g-3">
+                            <div class="col-md-6">
+                                <label asp-for="ReservationDate" class="form-label">
+                                    <i class="bi bi-calendar-event me-1"></i> @Localizer["DateTimeLabel"]
+                                </label>
+                                <input asp-for="ReservationDate"
+                                       class="form-control dtl-themed"
+                                       type="datetime-local"
+                                       step="900" />
+                                <span asp-validation-for="ReservationDate" class="text-danger small"></span>
+                            </div>
+
+                            <div class="col-md-6">
+                                <label asp-for="NumberOfPeople" class="form-label">@Localizer["PeopleLabel"]</label>
+                                <div class="input-group neon-input">
+                                    <span class="input-group-text neon-icon"><i class="bi bi-people"></i></span>
+                                    <input asp-for="NumberOfPeople" type="number" class="form-control" min="1" />
+                                </div>
+                                <span asp-validation-for="NumberOfPeople" class="text-danger small"></span>
+                            </div>
+                        </div>
+
+                        <div class="d-flex justify-content-between gap-2 mt-4">
+                            <a asp-action="All" class="btn btn-outline-neon">
+                                <i class="bi bi-arrow-left-circle me-1"></i> @Localizer["BtnBack"]
+                            </a>
+                            <button type="submit" class="btn btn-neon">
+                                <i class="bi bi-check-circle me-1"></i> @Localizer["BtnConfirm"]
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="px-4 pb-4">
+                    <div class="border-top" style="border-color:rgba(255,255,255,.08)!important;"></div>
+                    <div class="d-flex flex-wrap gap-2 mt-3 small text-muted">
+                        <span class="badge badge-soft"><i class="bi bi-shield-check me-1"></i> @Localizer["BadgeSecure"]</span>
+                        <span class="badge badge-soft"><i class="bi bi-lightning-charge me-1"></i> @Localizer["BadgeInstant"]</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <style>
+        .card-dark {
+            background: #151515;
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .neon-input .form-control,
+        .neon-input .form-select {
+            background: #111;
+            border: 1px solid #00ffc8;
+            color: #e6e6e6;
+        }
+
+            .neon-input .form-control:focus,
+            .neon-input .form-select:focus {
+                border-color: #00ffc8;
+                box-shadow: 0 0 8px #00ffc8;
+                background: #121212;
+                color: #fff;
+            }
+
+        .neon-input .neon-icon {
+            background: #111;
+            border: 1px solid #00ffc8;
+            color: #00ffc8;
+        }
+
+        .form-text.text-muted {
+            color: #9aa0a6 !important;
+        }
+
+        .badge-soft {
+            background: #202020;
+            color: #c9ccd1;
+            border: 1px solid rgba(255,255,255,.08);
+        }
+
+        .form-control[readonly] {
+            background: #111;
+            color: #e6e6e6;
+            border: 1px solid #00ffc8;
+        }
+
+        .btn-neon {
+            background: #00ffc8;
+            color: #000;
+            border: 0;
+            font-weight: 700;
+        }
+
+            .btn-neon:hover {
+                filter: brightness(1.08);
+                color: #000;
+                box-shadow: 0 0 12px #00ffc8;
+            }
+
+        .btn-outline-neon {
+            border: 1px solid #00ffc8;
+            color: #00ffc8;
+            background: transparent;
+            font-weight: 600;
+        }
+
+            .btn-outline-neon:hover {
+                background: #00ffc8;
+                color: #000;
+                box-shadow: 0 0 10px #00ffc8;
+            }
+
+        .dtl-themed {
+            color-scheme: light;
+            background: #0f1111 !important;
+            color: #e9ecef !important;
+            border: 1px solid rgba(0,255,200,.35) !important;
+            box-shadow: inset 0 0 0 1px rgba(0,255,200,.08);
+            transition: border-color .2s, box-shadow .2s, background .2s, color .2s;
+        }
+
+            .dtl-themed:focus {
+                border-color: #00ffc8 !important;
+                box-shadow: 0 0 0 .2rem rgba(0,255,200,.15), inset 0 0 0 1px rgba(0,255,200,.15);
+                background: #121414 !important;
+                color: #fff !important;
+            }
+
+            .dtl-themed::-webkit-calendar-picker-indicator {
+                opacity: 1 !important;
+                display: inline-block !important;
+                filter: invert(1) contrast(1.2);
+                cursor: pointer;
+            }
+
+        .dtl-themed {
+            -webkit-appearance: auto !important;
+            appearance: auto !important;
+        }
+    </style>
+}

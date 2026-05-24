@@ -1,0 +1,252 @@
+﻿@using SportComplexApp.Common
+@using SportComplexApp.Web.ViewModels.Home
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model HomePageViewModel
+
+@{
+    ViewData["Title"] = Localizer["PageTitle"];
+}
+
+<style>
+    html {
+        background-color: #121212 !important;
+    }
+
+    body {
+        background-color: transparent !important;
+    }
+</style>
+
+<link rel="stylesheet" href="~/css/neon-theme.css" asp-append-version="true" />
+
+<div id="vanta-bg"></div>
+
+<div class="container mt-4 position-relative" style="z-index: 1;">
+
+    <div class="position-relative rounded-4 overflow-hidden shadow-lg mb-5 home-hero bg-dark bg-opacity-50 border border-secondary border-opacity-25">
+        <div class="ratio ratio-21x9"></div>
+        <div class="position-absolute top-50 start-50 translate-middle text-center px-3 px-md-5 w-100">
+            <h1 class="display-5 fw-bold text-white mb-3">@Localizer["HeroTitle"]</h1>
+            <p class="lead text-white-50 mb-4">
+                @Localizer["HeroSubtitle"]
+            </p>
+            <a href="/Sport/All" class="btn btn-neon btn-lg rounded-pill shadow">
+                <i class="bi bi-rocket-takeoff me-1"></i> @Localizer["GetStartedBtn"]
+            </a>
+        </div>
+    </div>
+    
+    <section class="container my-5 text-center">
+        <h3 class="mb-3 text-white">
+            <i class="bi bi-clock text-neon"></i> @Localizer["WorkingHoursTitle"]
+        </h3>
+        <p class="lead text-light-50">
+            <span class="badge badge-soft fs-6 py-2 px-3">
+                @ApplicationConstants.OpeningTime.ToString(@"hh\:mm") - @ApplicationConstants.ClosingTime.ToString(@"hh\:mm")
+            </span>
+        </p>
+    </section>
+
+    <h2 class="mb-4 text-center" style="color:#00ffc8;">@Localizer["ExploreServicesTitle"]</h2>
+
+    <div class="row g-4">
+        <div class="col-12 col-lg-4">
+            <div class="card card-dark border-0 shadow-lg h-100 rounded-4">
+                <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between p-4">
+                    <h5 class="mb-0 text-white fw-bold">@Localizer["SportsCategory"]</h5>
+                    <a asp-controller="Sport" asp-action="All" class="btn btn-outline-neon btn-sm rounded-pill px-3">@Localizer["ViewAllBtn"]</a>
+                </div>
+                @if (Model.Sports?.Any() == true)
+                {
+                    <div id="sportsCarousel" class="carousel slide home-carousel h-100" data-bs-ride="carousel">
+                        <div class="carousel-inner h-100">
+                            @for (int i = 0; i < Model.Sports.Count(); i++)
+                            {
+                                var sport = Model.Sports.ElementAt(i);
+                                <div class="carousel-item h-100 @(i == 0 ? "active" : "")">
+                                    <div class="ratio ratio-16x9 rounded-bottom home-slide"
+                                         style="background-image:url('@sport.ImageUrl');">
+                                        <div class="home-caption">
+                                            <h6 class="mb-0 fw-bold">@sport.Name</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#sportsCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#sportsCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="p-5 text-muted text-center h-100 d-flex align-items-center justify-content-center">
+                        @Localizer["NoSportsMsg"]
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card card-dark border-0 shadow-lg h-100 rounded-4">
+                <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between p-4">
+                    <h5 class="mb-0 text-white fw-bold">@Localizer["TrainersCategory"]</h5>
+                    <a asp-controller="Trainer" asp-action="Browse" class="btn btn-outline-neon btn-sm rounded-pill px-3">@Localizer["ViewAllBtn"]</a>
+                </div>
+                @if (Model.Trainers?.Any() == true)
+                {
+                    <div id="trainersCarousel" class="carousel slide home-carousel h-100" data-bs-ride="carousel">
+                        <div class="carousel-inner h-100">
+                            @for (int i = 0; i < Model.Trainers.Count(); i++)
+                            {
+                                var trainer = Model.Trainers.ElementAt(i);
+                                <div class="carousel-item h-100 @(i == 0 ? "active" : "")">
+                                    <div class="ratio ratio-16x9 rounded-bottom home-slide"
+                                         style="background-image:url('@trainer.ImageUrl');">
+                                        <div class="home-caption">
+                                            <h6 class="mb-0 fw-bold">@trainer.FullName</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#trainersCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#trainersCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="p-5 text-muted text-center h-100 d-flex align-items-center justify-content-center">
+                        @Localizer["NoTrainersMsg"]
+                    </div>
+                }
+            </div>
+        </div>
+
+        <div class="col-12 col-lg-4">
+            <div class="card card-dark border-0 shadow-lg h-100 rounded-4">
+                <div class="card-header bg-transparent border-0 d-flex align-items-center justify-content-between p-4">
+                    <h5 class="mb-0 text-white fw-bold">@Localizer["SpaCategory"]</h5>
+                    <a asp-controller="Spa" asp-action="All" class="btn btn-outline-neon btn-sm rounded-pill px-3">@Localizer["ViewAllBtn"]</a>
+                </div>
+                @if (Model.SpaProcedures?.Any() == true)
+                {
+                    <div id="spaCarousel" class="carousel slide home-carousel h-100" data-bs-ride="carousel">
+                        <div class="carousel-inner h-100">
+                            @for (int i = 0; i < Model.SpaProcedures.Count(); i++)
+                            {
+                                var spa = Model.SpaProcedures.ElementAt(i);
+                                <div class="carousel-item h-100 @(i == 0 ? "active" : "")">
+                                    <div class="ratio ratio-16x9 rounded-bottom home-slide"
+                                         style="background-image:url('@spa.ImageUrl');">
+                                        <div class="home-caption">
+                                            <h6 class="mb-0 fw-bold">@spa.Name</h6>
+                                        </div>
+                                    </div>
+                                </div>
+                            }
+                        </div>
+                        <button class="carousel-control-prev" type="button" data-bs-target="#spaCarousel" data-bs-slide="prev">
+                            <span class="carousel-control-prev-icon"></span>
+                        </button>
+                        <button class="carousel-control-next" type="button" data-bs-target="#spaCarousel" data-bs-slide="next">
+                            <span class="carousel-control-next-icon"></span>
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <div class="p-5 text-muted text-center h-100 d-flex align-items-center justify-content-center">
+                        @Localizer["NoSpaMsg"]
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.net.min.js"></script>
+    
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+        VANTA.NET({
+        el: "#vanta-bg",
+        mouseControls: true,
+        touchControls: true,
+        gyroControls: false,
+        minHeight: 200.00,
+        minWidth: 200.00,
+        scale: 1.00,
+        scaleMobile: 1.00,
+        color: 0x00ffc8,
+        backgroundColor: 0x121212,
+        points: 12.00,
+        maxDistance: 24.00,
+        spacing: 18.00,
+        showDots: true
+        });
+        });
+    </script>
+
+    <style>
+        #vanta-bg {
+        position: fixed;
+        z-index: -1;
+        width: 100vw;
+        height: 100vh;
+        top: 0;
+        left: 0;
+        }
+
+        .home-hero {
+        background-size: cover;
+        background-position: center;
+        }
+
+        .home-carousel .carousel-inner {
+        border-bottom-left-radius: 1rem;
+        border-bottom-right-radius: 1rem;
+        overflow: hidden;
+        }
+
+        .home-slide {
+        background-size: cover;
+        background-position: center;
+        }
+
+        .home-caption {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 1rem;
+        background: linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0) 100%);
+        color: #fff;
+        }
+
+        .carousel-control-prev-icon,
+        .carousel-control-next-icon {
+        filter: invert(1) drop-shadow(0 0 5px #00ffc8);
+        }
+
+        .text-white-50 {
+        color: rgba(255,255,255,.7) !important;
+        }
+        
+        .text-neon {
+        color: #00ffc8 !important;
+        }
+    </style>
+}

@@ -1,0 +1,263 @@
+﻿@using SportComplexApp.Common
+@using static SportComplexApp.Common.ApplicationConstants
+@using Microsoft.AspNetCore.Localization
+@using Microsoft.AspNetCore.Mvc.Localization
+
+@inject IViewLocalizer Localizer
+
+@{
+    ViewData["Title"] = Localizer["PageTitle"];
+    int currentYear = DateTime.UtcNow.Year;
+    string footerNote = (ReleaseYear == currentYear) ?
+        $"{currentYear}" : $"{ReleaseYear} - {currentYear}";
+
+    var requestCulture = Context.Features.Get<IRequestCultureFeature>();
+    var currentCulture = requestCulture?.RequestCulture.UICulture.Name ?? "en";
+}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"]</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/neon-theme.css" asp-append-version="true" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css">
+
+    <style>
+        html, body { height: 100%; margin: 0; overflow-x: hidden; width: 100%; position: relative; }
+        body { display: flex; flex-direction: column; min-height: 100vh; background-color: #121212; }
+        main { flex-grow: 1; padding-top: 4.5rem; }
+        .sc-navbar { background: linear-gradient(135deg, #0a0a0a, #1a1a1a); border-bottom: 2px solid #00ffc8; transition: box-shadow 0.3s ease-in-out; }
+        .sc-navbar .nav-link, .sc-navbar .navbar-brand { color: #e0e0e0 !important; }
+        .sc-navbar .nav-link:hover { color: #00ffc8 !important; }
+        .glow { animation: neonPulse 1.5s infinite alternate; }
+        @@keyframes neonPulse { 0% { box-shadow: 0 0 10px #00ffc8, 0 0 20px rgba(0, 255, 200, 0.5); } 100% { box-shadow: 0 0 20px #00ffc8, 0 0 40px rgba(0, 255, 200, 0.8); } }
+        .sc-footer { background: #000; color: rgba(255,255,255,.85); transition: box-shadow 0.3s ease-in-out; }
+        .sc-footer a { color: rgba(255,255,255,.85); text-decoration: none; }
+        .sc-footer a:hover { color: #00ffc8; }
+        .sc-title { color: #00ffc8; margin-bottom: .5rem; }
+        .sc-muted { color: rgba(255,255,255,.65); }
+        .sc-logo { width: 36px; height: 36px; border-radius: 10px; color: #000; background: #00ffc8; box-shadow: 0 0 15px #00ffc8; }
+        .sc-brand { color: #fff; }
+        .sc-social { width: 36px; height: 36px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; background: rgba(255,255,255,.08); color: #fff; transition: all .2s ease-in-out; }
+        .sc-social:hover { background: #00ffc8; color: #000; box-shadow: 0 0 10px #00ffc8; }
+        .sc-btn-gradient { background: #00ffc8; border: 0; color: #000; font-weight: 600; }
+        .sc-btn-gradient:hover { filter: brightness(1.1); color: #000; box-shadow: 0 0 10px #00ffc8; }
+        .sc-footbar { border-top: 1px solid rgba(255,255,255,.08); padding: .75rem 0; color: rgba(255,255,255,.7); }
+        
+        @@media (max-width: 991.98px) {
+            .navbar-collapse {
+                background: #111111; 
+                padding: 1.5rem;
+                border-radius: 1rem;
+                margin-top: 1rem;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+                border: 1px solid rgba(0, 255, 200, 0.1);
+            }
+            .navbar-nav .nav-link {
+                padding: 0.8rem 0 !important;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                font-size: 1.1rem;
+            }
+            .navbar-nav .nav-item:last-child .nav-link {
+                border-bottom: none;
+            }
+            .navbar-collapse .dropdown-menu {
+                background: rgba(0, 0, 0, 0.2) !important;
+                border: none !important;
+                border-left: 2px solid #00ffc8 !important; 
+                border-radius: 0;
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem;
+                padding-left: 1rem;
+            }
+            .mobile-user-actions {
+                border-top: 1px solid rgba(255, 255, 255, 0.1);
+                margin-top: 1rem;
+                padding-top: 1.5rem;
+                display: flex;
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+    <nav class="navbar navbar-expand-lg navbar-dark sc-navbar fixed-top shadow-sm">
+        <div class="container-fluid align-items-center">
+            
+            @if (User.IsInRole("Admin"))
+            {
+                <a class="navbar-brand fw-bold m-0" asp-area="Admin" asp-controller="Home" asp-action="Index">SportComplex</a>
+            }
+            else
+            {
+                <a class="navbar-brand fw-bold m-0" asp-area="" asp-controller="Home" asp-action="Index">SportComplex</a>
+            }
+            
+            <div class="d-flex align-items-center gap-2 gap-md-3 ms-auto order-lg-last">
+                
+                <form asp-area="" asp-controller="Language" asp-action="SetLanguage" method="post" class="m-0" id="languageForm">
+                    <input type="hidden" name="returnUrl" value="@(Context.Request.Path + Context.Request.QueryString)" />
+                    <select name="culture" onchange="document.getElementById('languageForm').submit();" class="form-select form-select-sm bg-dark text-light border-neon px-2 py-1" style="width: auto; font-size: 0.85rem;">
+                        <option value="en" selected="@(currentCulture == "en")">EN</option>
+                        <option value="bg" selected="@(currentCulture == "bg")">BG</option>
+                    </select>
+                </form>
+                
+                <partial name="_LoginPartial" />
+
+                <button class="navbar-toggler border-0 px-1 text-light ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapseArea" aria-controls="navbarCollapseArea" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            </div>
+
+            <div class="navbar-collapse collapse mt-3 mt-lg-0" id="navbarCollapseArea">
+                <ul class="navbar-nav me-auto ms-lg-4 mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Index">@Localizer["NavHome"]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Trainer" asp-action="Browse">@Localizer["NavTrainers"]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Sport" asp-action="All">@Localizer["NavSports"]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Spa" asp-action="All">@Localizer["NavSpa"]</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" asp-area="" asp-controller="Tournament" asp-action="All">@Localizer["NavTournaments"]</a>
+                    </li>
+                    
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="reservationsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            @Localizer["NavMyReservations"]
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="reservationsDropdown">
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Sport" asp-action="MyReservations">@Localizer["NavMySports"]</a></li>
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Spa" asp-action="MyReservations">@Localizer["NavMySpa"]</a></li>
+                            <li><a class="dropdown-item" asp-area="" asp-controller="Tournament" asp-action="MyTournaments">@Localizer["NavMyTournaments"]</a></li>
+                        </ul>
+                    </li>
+                    
+                    @if (User.IsInRole("Trainer"))
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Trainer" asp-action="Reservations">@Localizer["NavTrainerDashboard"]</a>
+                        </li>
+                    }
+                    
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="adminDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                                @Localizer["NavAdmin"]
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="adminDropdown">
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="SportManagement" asp-action="All">@Localizer["NavAdminSports"]</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="SpaServicesManagement" asp-action="All">@Localizer["NavAdminSpa"]</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="TournamentManagement" asp-action="All">@Localizer["NavAdminTournaments"]</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="UserManagement" asp-action="Index">@Localizer["NavAdminUsers"]</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="TrainerManagement" asp-action="All">@Localizer["NavAdminTrainers"]</a></li>
+                                <li><a class="dropdown-item" asp-area="Admin" asp-controller="FacilityManagement" asp-action="All">@Localizer["NavAdminFacilities"]</a></li>
+                            </ul>
+                        </li>
+                        
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle fw-bold" href="#" id="reportsDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false" style="color: #00ffc8 !important;">
+                                <i class="bi bi-graph-up-arrow me-1"></i> @Localizer["NavReports"]
+                            </a>
+                            <ul class="dropdown-menu dropdown-menu-dark border-secondary shadow" aria-labelledby="reportsDropdown">
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Report" asp-action="SportReservations">
+                                        <i class="bi bi-activity me-2 text-info"></i>@Localizer["NavReportSports"]
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="dropdown-item" asp-area="Admin" asp-controller="Report" asp-action="SpaReservations">
+                                        <i class="bi bi-flower3 me-2 text-warning"></i>@Localizer["NavReportSpa"]
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
+
+    <main role="main" class="pb-3 container">
+        @RenderBody()
+    </main>
+
+    <footer class="sc-footer mt-auto">
+        <div class="container py-4">
+            <div class="row">
+                <div class="col-md-4 mb-3 text-center text-md-start">
+                    <h5 class="sc-title">SportComplex</h5>
+                    <p class="sc-muted">@Localizer["FooterDesc"]</p>
+                </div>
+                <div class="col-md-4 mb-3 text-center text-md-start">
+                    <h5 class="sc-title">@Localizer["FooterQuickLinks"]</h5>
+                    <ul class="list-unstyled">
+                        <li><a asp-controller="Sport" asp-action="All">@Localizer["NavSports"]</a></li>
+                        <li><a asp-controller="Spa" asp-action="All">@Localizer["NavSpa"]</a></li>
+                        <li><a asp-controller="Tournament" asp-action="All">@Localizer["NavTournaments"]</a></li>
+                    </ul>
+                </div>
+                <div class="col-md-4 mb-3 text-center text-md-start">
+                    <h5 class="sc-title">@Localizer["FooterFollowUs"]</h5>
+                    <div class="d-flex gap-2 justify-content-center justify-content-md-start">
+                        <a href="#" class="sc-social"><i class="bi bi-facebook"></i></a>
+                        <a href="#" class="sc-social"><i class="bi bi-instagram"></i></a>
+                        <a href="#" class="sc-social"><i class="bi bi-twitter"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="sc-footbar text-center px-3">
+            &copy; @footerNote - SportComplexWebApp
+            <p class="mb-0 mt-2">
+                <strong>@Localizer["FooterWorkingHours"]:</strong> @Localizer["FooterDays"]
+            </p>
+            <p class="mb-0">
+                @OpeningTime.ToString(@"hh\:mm")  - @ClosingTime.ToString(@"hh\:mm")
+            </p>
+        </div>
+    </footer>
+    
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+
+    <script>
+        document.addEventListener("scroll", function () {
+            const navbar = document.querySelector(".sc-navbar");
+            const footer = document.querySelector(".sc-footer");
+
+            if (window.scrollY > 10) {
+                navbar.classList.add("glow");
+            } else {
+                navbar.classList.remove("glow");
+            }
+
+            const scrollPosition = window.scrollY + window.innerHeight;
+            const footerTop = footer.offsetTop;
+            
+            if(footer && footerTop) {
+                if (scrollPosition >= footerTop) {
+                    footer.classList.add("glow");
+                } else {
+                    footer.classList.remove("glow");
+                }
+            }
+        });
+    </script>
+</body>
+</html>

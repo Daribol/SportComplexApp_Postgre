@@ -1,0 +1,122 @@
+﻿@using SportComplexApp.Web.ViewModels.Trainer
+@model IEnumerable<TrainerReservationViewModel>
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+
+@{
+    int currentMonth = ViewBag.CurrentMonth ?? DateTime.Now.Month;
+    int currentYear = ViewBag.CurrentYear ?? DateTime.Now.Year;
+    
+    var firstDayOfMonth = new DateTime(currentYear, currentMonth, 1);
+    var daysInMonth = DateTime.DaysInMonth(currentYear, currentMonth);
+    int startDayOfWeek = ((int)firstDayOfMonth.DayOfWeek + 6) % 7;
+
+    var prevMonth = currentMonth == 1 ? 12 : currentMonth - 1;
+    var prevYear = currentMonth == 1 ? currentYear - 1 : currentYear;
+    var nextMonth = currentMonth == 12 ? 1 : currentMonth + 1;
+    var nextYear = currentMonth == 12 ? currentYear + 1 : currentYear;
+    
+    var rawMonthName = System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat.GetMonthName(currentMonth);
+    var monthName = char.ToUpper(rawMonthName[0]) + rawMonthName.Substring(1);
+
+    var dateTimeFormat = System.Globalization.CultureInfo.CurrentUICulture.DateTimeFormat;
+    var daysOfWeek = new[]
+    {
+        dateTimeFormat.GetAbbreviatedDayName(DayOfWeek.Monday),
+        dateTimeFormat.GetAbbreviatedDayName(DayOfWeek.Tuesday),
+        dateTimeFormat.GetAbbreviatedDayName(DayOfWeek.Wednesday),
+        dateTimeFormat.GetAbbreviatedDayName(DayOfWeek.Thursday),
+        dateTimeFormat.GetAbbreviatedDayName(DayOfWeek.Friday),
+        dateTimeFormat.GetAbbreviatedDayName(DayOfWeek.Saturday),
+        dateTimeFormat.GetAbbreviatedDayName(DayOfWeek.Sunday)
+    };
+}
+
+<div class="d-flex justify-content-between align-items-center mb-4 bg-dark p-3 rounded-4 border border-secondary border-opacity-25 shadow-sm">
+    <button type="button" onclick="loadTrainerCalendar(@prevMonth, @prevYear)" class="btn btn-outline-neon">
+        <i class="bi bi-chevron-left"></i>
+    </button>
+    
+    <h3 class="mb-0 text-center" style="color:#00ffc8;">
+        @monthName @currentYear
+    </h3>
+    
+    <button type="button" onclick="loadTrainerCalendar(@nextMonth, @nextYear)" class="btn btn-outline-neon">
+        <i class="bi bi-chevron-right"></i>
+    </button>
+</div>
+
+<div class="card card-dark p-3 border-0 rounded-4 shadow-lg">
+    <div class="row row-cols-7 text-center fw-bold text-muted mb-2 small">
+        @foreach (var dayName in daysOfWeek)
+        {
+            <div class="col">@(char.ToUpper(dayName[0]) + dayName.Substring(1))</div>
+        }
+    </div>
+
+    <div class="row row-cols-7 g-2">
+        @for (int i = 0; i < startDayOfWeek; i++)
+        {
+            <div class="col">
+                <div class="bg-transparent border-0 h-100" style="min-height: 120px;"></div>
+            </div>
+        }
+
+        @for (int day = 1; day <= daysInMonth; day++)
+        {
+            var currentDayDate = new DateTime(currentYear, currentMonth, day);
+            var dayReservations = Model
+                .Where(r => r.ReservationDate.Date == currentDayDate.Date)
+                .OrderBy(r => r.ReservationDate)
+                .ToList();
+            
+            var isToday = currentDayDate.Date == DateTime.Today;
+
+            <div class="col">
+                <div class="card h-100 border border-secondary border-opacity-25 day-card @(isToday ? "border-info" : "") @(dayReservations.Any() ? "has-events" : "")"
+                     style="background-color: #0f1111; min-height: 140px;">
+                    
+                    <div class="p-1 px-2 border-bottom border-secondary border-opacity-10 d-flex justify-content-between align-items-center">
+                        <span class="small fw-bold @(isToday ? "text-info" : "text-muted")">@day</span>
+                        @if (dayReservations.Any())
+                        {
+                            <span class="badge badge-soft" style="font-size: 0.65rem;">@dayReservations.Count</span>
+                        }
+                    </div>
+                    
+                    <div class="p-1 overflow-auto style-scrollbar" style="max-height: 110px;">
+                        @foreach (var res in dayReservations)
+                        {
+                            var endTime = res.ReservationDate.AddMinutes(res.Duration);
+
+                            <div class="mb-1 p-1 rounded position-relative" style="background: rgba(0,255,200,0.05); border-left: 3px solid #00ffc8; font-size: 11px; line-height: 1.2;">
+                                <div class="fw-bold" style="color: #00ffc8;">
+                                    @res.ReservationDate.ToString("HH:mm") - @endTime.ToString("HH:mm")
+                                </div>
+                                <div class="text-white text-truncate fw-semibold">
+                                    @res.SportName <span class="text-info fw-normal">| @res.FacilityName</span>
+                                    @if (res.NumberOfPeople > 1)
+                                    {
+                                        <span class="text-muted fw-normal">(@res.NumberOfPeople) People</span>
+                                    }
+                                </div>
+                                <div class="text-muted text-truncate" style="font-size: 10px;">
+                                    <i class="bi bi-person"></i> @res.ClientName
+                                </div>
+
+                                <button type="button"
+                                        class="btn btn-link text-danger p-0 m-0 border-0 shadow-none position-absolute top-0 end-0 m-1"
+                                        title="@Localizer["BtnCancelTitle"]"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#customConfirmModal"
+                                        data-reservation-id="@res.Id">
+                                    <i class="bi bi-x-circle-fill"></i>
+                                </button>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

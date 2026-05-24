@@ -1,0 +1,110 @@
+﻿@using SportComplexApp.Web.ViewModels.Sport
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model AddSportViewModel
+
+@{
+    ViewData["Title"] = Localizer["Title"];
+}
+
+<div class="d-flex align-items-center justify-content-between mb-4">
+    <h2 class="mb-0" style="color:#00ffc8;">@Localizer["Heading"]</h2>
+    <a asp-action="All" class="btn btn-outline-neon">
+        <i class="bi bi-arrow-left-circle me-1"></i> @Localizer["BtnBack"]
+    </a>
+</div>
+
+@if (TempData["errorMessage"] != null)
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        @TempData["errorMessage"]
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
+<div class="card card-dark shadow-lg border-0 rounded-4">
+    <div class="card-body p-4 p-md-5">
+        <form asp-action="Add" method="post" novalidate>
+            <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="Name" class="form-label text-light">@Localizer["LabelName"]</label>
+                    <div class="input-group neon-input">
+                        <span class="input-group-text neon-icon"><i class="bi bi-basket2"></i></span>
+                        <input asp-for="Name" class="form-control" placeholder="@Localizer["PlaceholderName"]" />
+                    </div>
+                    <span asp-validation-for="Name" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label asp-for="Price" class="form-label text-light">@Localizer["LabelPrice"]</label>
+                    <div class="input-group neon-input">
+                        <span class="input-group-text neon-icon"><i class="bi bi-cash-coin"></i></span>
+                        <input asp-for="Price" class="form-control" placeholder="@Localizer["PlaceholderPrice"]" />
+                    </div>
+                    <span asp-validation-for="Price" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label asp-for="Duration" class="form-label text-light">@Localizer["LabelDuration"]</label>
+                    <div class="input-group neon-input">
+                        <span class="input-group-text neon-icon"><i class="bi bi-stopwatch"></i></span>
+                        <input asp-for="Duration" class="form-control" placeholder="@Localizer["PlaceholderDuration"]" />
+                    </div>
+                    <span asp-validation-for="Duration" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label asp-for="MinPeople" class="form-label text-light">@Localizer["LabelMinPeople"]</label>
+                    <div class="input-group neon-input">
+                        <span class="input-group-text neon-icon"><i class="bi bi-people"></i></span>
+                        <input asp-for="MinPeople" class="form-control" placeholder="@Localizer["PlaceholderMinPeople"]" />
+                    </div>
+                    <span asp-validation-for="MinPeople" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-3">
+                    <label asp-for="MaxPeople" class="form-label text-light">@Localizer["LabelMaxPeople"]</label>
+                    <div class="input-group neon-input">
+                        <span class="input-group-text neon-icon"><i class="bi bi-people-fill"></i></span>
+                        <input asp-for="MaxPeople" class="form-control" placeholder="@Localizer["PlaceholderMaxPeople"]" />
+                    </div>
+                    <span asp-validation-for="MaxPeople" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="ImageUrl" class="form-label text-light">@Localizer["LabelImage"]</label>
+                    <div class="input-group neon-input">
+                        <span class="input-group-text neon-icon"><i class="bi bi-image"></i></span>
+                        <input asp-for="ImageUrl" class="form-control" placeholder="@Localizer["PlaceholderImage"]" />
+                    </div>
+                    <span asp-validation-for="ImageUrl" class="text-danger small"></span>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="FacilityId" class="form-label text-light">@Localizer["LabelFacility"]</label>
+                    <div class="input-group neon-input">
+                        <span class="input-group-text neon-icon"><i class="bi bi-building"></i></span>
+                        <select asp-for="FacilityId" class="form-select" asp-items="Model.Facilities">
+                            <option value="">@Localizer["SelectFacility"]</option>
+                        </select>
+                    </div>
+                    <span asp-validation-for="FacilityId" class="text-danger small"></span>
+                </div>
+            </div>
+
+            <div class="mt-4 d-flex justify-content-end gap-2">
+                <button type="submit" class="btn btn-neon">
+                    <i class="bi bi-plus-circle me-1"></i> @Localizer["BtnAdd"]
+                </button>
+                <a asp-action="All" class="btn btn-outline-neon">@Localizer["BtnCancel"]</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.css">
+}

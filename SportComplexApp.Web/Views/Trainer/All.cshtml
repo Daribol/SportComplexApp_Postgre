@@ -1,0 +1,84 @@
+﻿@using SportComplexApp.Web.ViewModels.Trainer
+@using Microsoft.AspNetCore.Mvc.Localization
+@inject IViewLocalizer Localizer
+@model IEnumerable<AllTrainersViewModel>
+
+@{
+    ViewData["Title"] = Localizer["Title"];
+}
+<link rel="stylesheet" href="~/css/neon-theme.css" asp-append-version="true" />
+
+<div class="container mt-4">
+    <h2 class="mb-4 text-center" style="color:#00ffc8;">@Localizer["Heading"]</h2>
+    <hr class="mb-4" style="border-color: rgba(255,255,255,.08);" />
+
+    @if (!Model.Any())
+    {
+        <div class="alert alert-info text-center">
+            <i class="bi bi-info-circle-fill me-2"></i>@Localizer["NoTrainersMsg"]
+        </div>
+    }
+    else
+    {
+        <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+            @foreach (var trainer in Model)
+            {
+                <div class="col">
+                    <div class="card card-dark hover h-100 border-0">
+                        @if (!string.IsNullOrWhiteSpace(trainer.ImageUrl))
+                        {
+                            <img src="@trainer.ImageUrl" class="card-img-top trainer-img" alt="@trainer.Name">
+                        }
+                        else
+                        {
+                            <div class="trainer-img bg-dark d-flex align-items-center justify-content-center">
+                                <i class="bi bi-person-bounding-box display-4 text-muted"></i>
+                            </div>
+                        }
+
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title text-center mb-2">@trainer.Name @trainer.LastName</h5>
+
+                            <div class="mb-3 text-center">
+                                @if (trainer.Sports != null && trainer.Sports.Any())
+                                {
+                                    foreach (var sport in trainer.Sports)
+                                    {
+                                        <span class="badge badge-sport me-1 mb-1">@sport</span>
+                                    }
+                                }
+                                else
+                                {
+                                    <span class="text-muted">@Localizer["NoSpecialization"]</span>
+                                }
+                            </div>
+
+                            <div class="mt-auto">
+                                <a asp-controller="Trainer"
+                                       asp-action="Details"
+                                       asp-route-id="@trainer.Id"
+                                       asp-route-sportId="@ViewBag.SportId"
+                                       class="btn btn-neon btn-sm w-100">
+                                    <i class="bi bi-person-lines-fill me-1"></i> @Localizer["BtnViewDetails"]
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    }
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+
+    <style>
+        .trainer-img {
+            width: 100% !important;
+            height: 300px !important;
+            object-fit: cover !important;
+            object-position: center top !important;
+        }
+    </style>
+}
